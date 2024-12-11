@@ -5,22 +5,25 @@ Description : Gérer le service DHCP
 Auteur : Noah Froment
 Date : 11/12/2024
 
-Version : 2
+Version : 3
 ==========================================================================
 #>
 
+# Importer la bibliothèque Visual Basic de Microsoft
+[void][System.Reflection.Assembly]::LoadWithPartialName('Microsoft.VisualBasic')
+
 # Demander les informations à l'utilisateur
-$nomEtendue = [string](Read-Host "Le nom de l'étendue")
+$nomEtendue = [Microsoft.VisualBasic.Interaction]::InputBox("Le nom de l'étendue", "Ajout d'étendue", "")
 
-$reseauAdd = [ipaddress](Read-Host "L'adresse IP du réseau")
-$masqueReseau = [ipaddress](Read-Host "Le masque du réseau")
-$passerelle = [ipaddress](Read-Host "La passerelle du réseau")
+$reseauAdd = [Microsoft.VisualBasic.Interaction]::InputBox("L'adresse IP du réseau", "Ajout d'étendue", "")
+$masqueReseau = [Microsoft.VisualBasic.Interaction]::InputBox("Le masque du réseau", "Ajout d'étendue", "")
+$passerelle = [Microsoft.VisualBasic.Interaction]::InputBox("La passerelle du réseau", "Ajout d'étendue", "")
 
-$premierAdd = [ipaddress](Read-Host "Le premier Host du réseau")
-$dernierAdd = [ipaddress](Read-Host "Le dernier host du réseau")
+$premierAdd = [Microsoft.VisualBasic.Interaction]::InputBox("Le premier Host du réseau", "Ajout d'étendue", "")
+$dernierAdd = [Microsoft.VisualBasic.Interaction]::InputBox("Le dernier host du réseau", "Ajout d'étendue", "")
 
-$nomDNS = [string](Read-Host "Le nom du domaine")
-$dnsAdd = [ipaddress](Read-Host "Adresse DNS")
+$nomDNS = [Microsoft.VisualBasic.Interaction]::InputBox("Le nom du domaine", "Ajout d'étendue", "")
+$dnsAdd = [Microsoft.VisualBasic.Interaction]::InputBox("Adresse DNS", "Ajout d'étendue", "")
 
 # Afficher les informations de l'étendue
 Write-Output @"
