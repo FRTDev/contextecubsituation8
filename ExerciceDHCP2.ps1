@@ -19,6 +19,9 @@ $passerelle = [ipaddress](Read-Host "La passerelle du réseau")
 $premierAdd = [ipaddress](Read-Host "Le premier Host du réseau")
 $dernierAdd = [ipaddress](Read-Host "Le dernier host du réseau")
 
+$nomDNS = [string](Read-Host "Le nom du domaine")
+$dnsAdd = [ipaddress](Read-Host "Adresse DNS")
+
 # Afficher les informations de l'étendue
 Write-Output @"
 --------------------------------------------------------------
@@ -33,6 +36,9 @@ Voici les informations de l'étendue que vous voulez ajouter !
             Premier Hôte : $premierAdd
             Dernier Hôte : $dernierAdd
 
+            Domaine : $nomDNS
+            Adresse DNS : $dnsAdd
+
 --------------------------------------------------------------
                     Ajouter ? y/n
 "@
@@ -46,6 +52,7 @@ if ($confirmation -eq "y") {
         # Créer l'étendue DHCP
         Add-DhcpServerv4Scope -name $nomEtendue -StartRange $premierAdd -EndRange $dernierAdd -SubnetMask $masqueReseau -State Active
         Set-DhcpServerv4OptionValue -OptionID 3 -Value $passerelle -ScopeID $reseauAdd
+        Set-DhcpServerv4OptionValue -DnsDomain $nomDNS -DnsServer $dnsAdd
         Write-Output "L'étendue a été ajoutée avec succès."
     } catch {
         Write-Output "Erreur lors de l'ajout de l'étendue : $_"
