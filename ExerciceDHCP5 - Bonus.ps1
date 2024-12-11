@@ -29,8 +29,8 @@ for ($i = 1; $i -le $nombreEtendues; $i++) {
     $nomDNS = [Microsoft.VisualBasic.Interaction]::InputBox("Le nom du domaine", "Ajout d'étendue", "")
     $dnsAdd = [Microsoft.VisualBasic.Interaction]::InputBox("Adresse DNS", "Ajout d'étendue", "")
 
-# Afficher les informations de l'étendue
-Write-Output @"
+    # Afficher les informations de l'étendue
+    Write-Output @"
 --------------------------------------------------------------
 Voici les informations de l'étendue que vous voulez ajouter !
 
@@ -47,25 +47,45 @@ Voici les informations de l'étendue que vous voulez ajouter !
             Adresse DNS : $dnsAdd
 
 --------------------------------------------------------------
-                    Ajouter ? y/n
+                    Ajouter ? (y/n
 "@
 
-# Demander la confirmation de l'utilisateur
-$confirmation = [string](Read-Host)
+    # Demander la confirmation de l'utilisateur
+    $confirmation = [string](Read-Host)
 
-if ($confirmation -eq "y") {
-    Write-Output "Ajout de l'étendue en cours ..."
-    try {
-        # Créer l'étendue DHCP
-        Add-DhcpServerv4Scope -name $nomEtendue -StartRange $premierAdd -EndRange $dernierAdd -SubnetMask $masqueReseau -State Active
-        Set-DhcpServerv4OptionValue -OptionID 3 -Value $passerelle -ScopeID $reseauAdd
-        Set-DhcpServerv4OptionValue -DnsDomain $nomDNS -DnsServer $dnsAdd
-        Write-Output "L'étendue a été ajoutée avec succès."
-    } catch {
-        Write-Output "Erreur lors de l'ajout de l'étendue : $_"
+    if ($confirmation -eq "y") {
+        Write-Output "Ajout de l'étendue en cours ..."
+        try {
+            # Créer l'étendue DHCP
+            Add-DhcpServerv4Scope -Name $nomEtendue -StartRange $premierAdd -EndRange $dernierAdd -SubnetMask $masqueReseau -State Active
+            Set-DhcpServerv4OptionValue -OptionID 3 -Value $passerelle -ScopeID $reseauAdd
+            Set-DhcpServerv4OptionValue -DnsDomain $nomDNS -DnsServer $dnsAdd
+            Write-Output "L'étendue a été ajoutée avec succès."
+        } catch {
+            Write-Output "Erreur lors de l'ajout de l'étendue : $_"
+        }
+
+        # Demander si l'utilisateur souhaite ajouter des réservations d'adresses
+        $ajouterReservations = [Microsoft.VisualBasic.Interaction]::InputBox("Souhaitez-vous ajouter des réservations d'adresses ? (y/n)", "Réservations d'adresses", "")
+
+        if ($ajouterReservations -eq "y") {
+            $nombreReservations = [int][Microsoft.VisualBasic.Interaction]::InputBox("Combien de réservations souhaitez-vous ajouter ?", "Réservations d'adresses", "")
+
+            for ($j = 1; $j -le $nombreReservations; $j++) {
+                $adresseIP = [Microsoft.VisualBasic.Interaction]::InputBox("Adresse IP de la réservation", "Réservations d'adresses", "")
+                $nomClient = [Microsoft.VisualBasic.Interaction]::InputBox("Nom du client", "Réservations d'adresses", "")
+                $macAddress = [Microsoft.VisualBasic.Interaction]::InputBox("Adresse MAC du client", "Réservations d'adresses", "")
+
+                try {
+                    Add-DhcpServerv4Reservation -ScopeId $reseauAdd -IPAddress $adresseIP -ClientId $macAddress -Name $nomClient
+                    Write-Output "Réservation ajoutée avec succès pour $nomClient."
+                } catch {
+                    Write-Output "Erreur lors de l'ajout de la réservation : $_"
+                }
+            }
+        }
+    } else {
+        Write-Output "Opération annulée par l'utilisateur."
+        exit
     }
-} else {
-    Write-Output "Opération annulée par l'utilisateur."
-    exit
-}
 }
