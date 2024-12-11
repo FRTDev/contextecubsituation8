@@ -30,7 +30,7 @@ for ($i = 1; $i -le $nombreEtendues; $i++) {
     $dnsAdd = [Microsoft.VisualBasic.Interaction]::InputBox("Adresse DNS", "Ajout d'étendue", "")
 
     # Afficher les informations de l'étendue
-    Write-Output @"
+    Write-Host -ForegroundColor Yellow @"
 --------------------------------------------------------------
 Voici les informations de l'étendue que vous voulez ajouter !
 
@@ -48,7 +48,7 @@ Voici les informations de l'étendue que vous voulez ajouter !
 
 --------------------------------------------------------------
                     Ajouter ? (y/n)
-"@
+"@ 
 
     # Demander la confirmation de l'utilisateur
     $confirmation = [string](Read-Host)
