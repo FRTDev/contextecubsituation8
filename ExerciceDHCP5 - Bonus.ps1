@@ -47,7 +47,7 @@ Voici les informations de l'étendue que vous voulez ajouter !
             Adresse DNS : $dnsAdd
 
 --------------------------------------------------------------
-                    Ajouter ? (y/n
+                    Ajouter ? (y/n)
 "@
 
     # Demander la confirmation de l'utilisateur
